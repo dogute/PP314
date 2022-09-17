@@ -32,7 +32,7 @@ const renderUsers = (users) => {
     users.forEach(user => {
         let userRoles = "";
         for(let i = 0; i < user.roles.length; i++) {
-            userRoles += user.roles[i].role.replace("ROLE_"," ");
+            userRoles += user.roles[i].role;
             userRoles += " ";
         }
         let temp = `<tr>
@@ -132,8 +132,8 @@ async function editUser(modal, id) {
                 <div class="form-group">
                   <label for="role1"><b>Role</b></label>
                   <select size="2" multiple class="form-control" id="role1">
-                    <option value="ROLE_USER">USER</option>
-                    <option value="ROLE_ADMIN">ADMIN</option>
+                    <option value="USER">USER</option>
+                    <option value="ADMIN">ADMIN</option>
                  </select>
                 </div>
                 </form>`
@@ -217,8 +217,8 @@ async function deleteUser(modal, id) {
                 <div class="form-group">
                   <label for="role1"><b>Role</b></label>
                   <select size="2" multiple class="form-control" id="role1" readonly>
-                    <option value="ROLE_USER">ROLE_USER</option>
-                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                    <option value="USER">USER</option>
+                    <option value="ADMIN">ADMIN</option>
                 </select>
                 </div>
                 </form>`
@@ -299,7 +299,7 @@ async function getUserPage() {
               <td>${user.lastName}</td>
               <td>${user.age}</td>
               <td>${user.username}</td>       
-              <td>${userRoles.replace("ROLE_"," ")}</td>`
+              <td>${userRoles}</td>`
         table.append(temp)
     })
 }

@@ -84,6 +84,8 @@ public class UserService implements UserDetailsService {
         return roleDao.findAll();
     }
 
+
+
     @Transactional
     public User getAuthUser() {
         User user = (User) SecurityContextHolder.getContext()

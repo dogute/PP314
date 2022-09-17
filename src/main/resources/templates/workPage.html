@@ -34,8 +34,8 @@
     <!-- SIDEBAR -->
     <div style="background-color:white" class="col-2 sidebar">
         <div class="list-group" id="list-tab" role="tablist">
-            <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home" sec:authorize="hasAuthority('ROLE_ADMIN')">Admin</a>
-            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile" sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')">User</a>
+            <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home" sec:authorize="hasAuthority('ADMIN')">Admin</a>
+            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile" sec:authorize="hasAnyAuthority('USER', 'ADMIN')">User</a>
         </div>
     </div>
 
@@ -45,7 +45,7 @@
         <div class="tab-content" id="nav-tabContent">
 
             <!-- ADMIN panel-->
-            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list" sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list" sec:authorize="hasAuthority('ADMIN')">
 
                 <h1>Admin panel</h1>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -131,8 +131,8 @@
                                     <div class="form-group">
                                         <label for="roleAdd"><b>Role</b></label>
                                         <select size="2" multiple class="form-control" id="roleAdd">
-                                            <option value="ROLE_USER">USER</option>
-                                            <option value="ROLE_ADMIN">ADMIN</option>
+                                            <option value="USER">USER</option>
+                                            <option value="ADMIN">ADMIN</option>
                                         </select>
                                     </div>
                                     <button id="addUserButton" type="submit" class="btn btn-success">Add new user</button>
@@ -144,7 +144,7 @@
             </div>
 
             <!-- USER panel-->
-            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list" sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')">
+            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list" sec:authorize="hasAnyAuthority('USER', 'ADMIN')">
                 <h4>User information-page</h4>
                 <div class="container">
                     <h4>About user</h4>

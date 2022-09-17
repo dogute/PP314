@@ -15,21 +15,21 @@ public class RestUserController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<User> showAllUsers() {
         List<User> list = userService.getAllUsers();
         return list;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public List<User> addUser(@RequestBody User user) {
         userService.saveUser(user);
         return userService.getAllUsers();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public User showUser(@PathVariable long id) {
         User user = userService.getUserById(id);
@@ -41,7 +41,7 @@ public class RestUserController {
         return userService.getAuthUser();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public List<User> updateUser(@RequestBody User user, @PathVariable Long id) {
         user.setId(id);
@@ -49,7 +49,7 @@ public class RestUserController {
         return userService.getAllUsers();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public List<User> deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
