@@ -15,7 +15,9 @@
                 <ul class="navbar-nav me-auto mb-2 mb-xl-0">
                     <span class="align-middle font-weight-bold mr-1" sec:authentication="name"></span></b>
                     <span class="align-middle mr-1">with roles:</span>
-                    <span class="align-middle" sec:authentication="principal.authorities"></span>
+                    <p><th:block th:each="authority, iterStat : ${#authentication.getAuthorities()}">
+                        <th:block th:text="${authority.getAuthority() + (iterStat.last?'':',')}">
+                                                    </th:block></th:block></p>
                 </ul>
             </div>
             <form th:action="@{/logout}" method="post">
