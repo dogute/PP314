@@ -14,8 +14,16 @@ const userFetchService = {
     findAuthUser: async () => await fetch('api/users/auth_user'),
     findAllUsers: async () => await fetch('api/users'),
     findOneUser: async (id) => await fetch(`api/users/${id}`),
-    addNewUser: async (user) => await fetch('api/users', {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
-    updateUser: async (user, id) => await fetch(`api/users/${id}`, {method: 'PUT', headers: userFetchService.head, body: JSON.stringify(user)}),
+    addNewUser: async (user) => await fetch('api/users', {
+        method: 'POST',
+        headers: userFetchService.head,
+        body: JSON.stringify(user)
+    }),
+    updateUser: async (user, id) => await fetch(`api/users/${id}`, {
+        method: 'PUT',
+        headers: userFetchService.head,
+        body: JSON.stringify(user)
+    }),
     deleteUser: async (id) => await fetch(`api/users/${id}`, {method: 'DELETE', headers: userFetchService.head})
 }
 
@@ -23,6 +31,8 @@ async function getTableWithUsers() {
     userFetchService.findAllUsers()
         .then(res => res.json())
         .then(data => renderUsers(data))
+
+
 }
 
 const renderUsers = (users) => {
@@ -31,7 +41,7 @@ const renderUsers = (users) => {
 
     users.forEach(user => {
         let userRoles = "";
-        for(let i = 0; i < user.roles.length; i++) {
+        for (let i = 0; i < user.roles.length; i++) {
             userRoles += user.roles[i].role;
             userRoles += " ";
         }
@@ -151,9 +161,9 @@ async function editUser(modal, id) {
         let data = {
             id: id,
             firstName: firstName,
-            lastName : lastName,
+            lastName: lastName,
             age: age,
-            username : username,
+            username: username,
             password: password,
             roles: roles
         }
@@ -161,7 +171,7 @@ async function editUser(modal, id) {
         const response = await userFetchService.updateUser(data, id).catch(error => console.log(error));
 
         if (response.ok) {
-            getTableWithUsers();
+            await getTableWithUsers();
             modal.modal('hide');
         } else {
             let body = await response.json();
@@ -174,6 +184,14 @@ async function editUser(modal, id) {
             modal.find('.modal-body').prepend(alert);
         }
     })
+}
+
+function refreshTable() {
+    let table = document.querySelector('#mainTableWithUsers tbody')
+    while (table.rows.length > 1) {
+        table.deleteRow(1)
+    }
+    setTimeout(getTableWithUsers, 30000);
 }
 
 async function deleteUser(modal, id) {
@@ -230,7 +248,7 @@ async function deleteUser(modal, id) {
         const response = await userFetchService.deleteUser(id).catch(error => console.log(error));
 
         if (response.ok) {
-            getTableWithUsers();
+            await getTableWithUsers();
             modal.modal('hide');
         } else {
             let body = await response.json();
@@ -255,29 +273,26 @@ async function addNewUser() {
     let roles = addUserForm.find("#roleAdd").val();
     let data = {
         firstName: firstName,
-        lastName : lastName,
+        lastName: lastName,
         age: age,
-        username : username,
+        username: username,
         password: password,
         roles: roles
     }
-
-    const response = await userFetchService.addNewUser(data);
-
+    console.log(data)
+    const response = await userFetchService.addNewUser(data).catch(error => console.log(error));
     if (response.ok) {
-
-
-    } else {
-        let body = await response.json();
-        let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="Error">
-                        ${body.info}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>`;
-        addUserForm.prepend(alert)
+        await getTableWithUsers();
+        addUserForm.find("#firstNameAdd").val().trim();
+        addUserForm.find("#lastNameAdd").val().trim();
+        addUserForm.find("#ageAdd").val().trim();
+        addUserForm.find("#usernameAdd").val().trim();
+        addUserForm.find("#passwordAdd").val().trim();
+        addUserForm.find("#roleAdd").val();
+        alert('User was added')
     }
 }
+
 
 async function getUserPage() {
     let table = $('#userTable tbody');
@@ -288,7 +303,7 @@ async function getUserPage() {
 
     user.then(user => {
         let userRoles = "";
-        for(let i = 0; i < user.roles.length; i++) {
+        for (let i = 0; i < user.roles.length; i++) {
             userRoles += user.roles[i].role;
             userRoles += " ";
         }
