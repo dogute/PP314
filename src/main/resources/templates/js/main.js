@@ -32,7 +32,7 @@ const renderUsers = (users) => {
     users.forEach(user => {
         let userRoles = "";
         for(let i = 0; i < user.roles.length; i++) {
-            userRoles += user.roles[i].role;
+            userRoles += user.roles[i].role.replace("ROLE_"," ");
             userRoles += " ";
         }
         let temp = `<tr>
@@ -132,8 +132,8 @@ async function editUser(modal, id) {
                 <div class="form-group">
                   <label for="role1"><b>Role</b></label>
                   <select size="2" multiple class="form-control" id="role1">
-                    <option value="ROLE_USER">ROLE_USER</option>
-                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                    <option value="ROLE_USER">USER</option>
+                    <option value="ROLE_ADMIN">ADMIN</option>
                  </select>
                 </div>
                 </form>`
@@ -165,7 +165,7 @@ async function editUser(modal, id) {
             modal.modal('hide');
         } else {
             let body = await response.json();
-            let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
+            let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="Error">
                             ${body.info}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -207,7 +207,7 @@ async function deleteUser(modal, id) {
                   <input type="number" id="age1" class="form-control" value="${user.age}" name="age" readonly/>
                 </div>
                 <div class="form-group">
-                  <label for="username1"><bEmail</b></label>
+                  <label for="username1"><b>Email</b></label>
                   <input type="text" class="form-control" id="username1" value="${user.username}" name="username" readonly/>
                 </div>
                 <div class="form-group">
@@ -234,7 +234,7 @@ async function deleteUser(modal, id) {
             modal.modal('hide');
         } else {
             let body = await response.json();
-            let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
+            let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="Error">
                             ${body.info}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -261,14 +261,15 @@ async function addNewUser() {
         password: password,
         roles: roles
     }
+
     const response = await userFetchService.addNewUser(data);
 
     if (response.ok) {
-        getTableWithUsers();
+
 
     } else {
         let body = await response.json();
-        let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
+        let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="Error">
                         ${body.info}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -297,9 +298,8 @@ async function getUserPage() {
               <td>${user.firstName}</td>
               <td>${user.lastName}</td>
               <td>${user.age}</td>
-              <td>${user.username}</td>
-              <td>${user.password}</td>
-              <td>${userRoles}</td>`
+              <td>${user.username}</td>       
+              <td>${userRoles.replace("ROLE_"," ")}</td>`
         table.append(temp)
     })
 }

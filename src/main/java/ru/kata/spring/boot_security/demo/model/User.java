@@ -120,6 +120,14 @@ public class User implements UserDetails {
         }
         return stringRoles;
     }
+    public String roleToString(User user) {
+        StringBuilder builder = new StringBuilder();
+        Set<Role> roles = user.getRoles();
+        for (Role role : roles) {
+            builder.append(role.getRole()).append(" ");
+        }
+        return builder.toString();
+    }
 
     @Override
     public String toString() {
