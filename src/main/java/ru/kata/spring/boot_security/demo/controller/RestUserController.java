@@ -8,7 +8,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
 
-@RequestMapping("/api/users")
+@RequestMapping("*/api/users")
 @RestController
 public class RestUserController {
 

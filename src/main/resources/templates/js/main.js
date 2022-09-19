@@ -191,8 +191,10 @@ function refreshTable() {
     while (table.rows.length > 1) {
         table.deleteRow(1)
     }
-    setTimeout(getTableWithUsers, 30000);
+    setTimeout(getTableWithUsers, 1);
 }
+
+window.addEventListener("load", getUserPage, {once: true});
 
 async function deleteUser(modal, id) {
     let preuser = await userFetchService.findOneUser(id);
@@ -319,11 +321,16 @@ async function getUserPage() {
     })
 }
 
+
+
 getTableWithUsers()
 getDefaultModal()
 $("#addUserButton").on('click', async () => {
-    addNewUser()
+    addNewUser();
 })
 $("#list-profile-list").on('click', async () => {
     getUserPage()
+
 })
+
+
