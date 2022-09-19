@@ -1,8 +1,6 @@
 $(async function () {
     await getTableWithUsers();
-    getNewUserForm();
-    getDefaultModal();
-    addNewUser();
+    await getDefaultModal();
 })
 
 const userFetchService = {
@@ -34,7 +32,6 @@ async function getTableWithUsers() {
 
 
 }
-
 const renderUsers = (users) => {
     let table = $('#mainTableWithUsers tbody');
     table.empty();
@@ -74,7 +71,6 @@ const renderUsers = (users) => {
         defaultModal.modal('show');
     })
 }
-
 
 async function getDefaultModal() {
     $('#defaultModal').modal({
@@ -186,6 +182,7 @@ async function editUser(modal, id) {
     })
 }
 
+
 function refreshTable() {
     let table = document.querySelector('#mainTableWithUsers tbody')
     while (table.rows.length > 1) {
@@ -193,6 +190,10 @@ function refreshTable() {
     }
     setTimeout(getTableWithUsers, 1);
 }
+
+
+
+window.addEventListener("load", getUserPage, {once: true});
 
 async function deleteUser(modal, id) {
     let preuser = await userFetchService.findOneUser(id);
@@ -280,18 +281,62 @@ async function addNewUser() {
         roles: roles
     }
     console.log(data)
-    const response = await userFetchService.addNewUser(data).catch(error => console.log(error));
+    await userFetchService.addNewUser(data)
+    refreshTable()
+    $('.nav-tabs a[href="#home"]').tab('show');
+    $('.nav-tabs a[href="#profile"]').removeClass('active')
+
+
+}
+
+async function getUsers() {
+
+
+    const response = await fetch("api/users");
+
     if (response.ok) {
-        await getTableWithUsers();
-        addUserForm.find("#firstNameAdd").val().trim();
-        addUserForm.find("#lastNameAdd").val().trim();
-        addUserForm.find("#ageAdd").val().trim();
-        addUserForm.find("#usernameAdd").val().trim();
-        addUserForm.find("#passwordAdd").val().trim();
-        addUserForm.find("#roleAdd").val();
-        alert('User was added')
+        let json = await response.json()
+            .then(data => replaceTable(data));
+    } else {
+        alert("Ошибка HTTP: " + response.status);
+    }
+
+    function replaceTable(data) {
+
+        const placement = document.getElementById("myTabContent")
+        placement.innerHTML = "";
+        data.forEach(({id, firstName, lastName, age, username, roles}) => {
+            let userRoles = "";
+            roles.forEach((role) => {
+                userRoles = userRoles + role.name.split("_")[1] + " ";
+            })
+            const element = document.createElement("tr");
+            element.innerHTML = `
+            <th scope="row">${id}</th>
+            <td>${firstName}</td>
+            <td>${lastName}</td>
+            <td>${age}</td>
+            <td>${username}</td>
+            <td>${userRoles}</td>
+            <td>
+                <button type="button" class="btn btn-info text-white" data-bs-userId=${id}
+                    data-bs-userName=${firstName} data-bs-userSurname=${lastName} data-bs-userAge=${age}
+                    data-bs-userEmail=${username} data-bs-toggle="modal"
+                    data-bs-target="#ModalEdit">Edit</button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger" data-bs-userId=${id}
+                    data-bs-userName=${firstName} data-bs-userSurname=${lastName} data-bs-userAge=${age}
+                    data-bs-userEmail=${username} data-bs-toggle="modal"
+                    data-bs-target="#ModalDelete">Delete</button>
+            </td>            
+            `
+            placement.append(element);
+        })
     }
 }
+
+
 
 
 async function getUserPage() {
@@ -318,16 +363,11 @@ async function getUserPage() {
         table.append(temp)
     })
 }
-window.addEventListener("load", getUserPage, {once: true});
 
 
-getTableWithUsers()
-getDefaultModal()
-$("#addUserButton").on('click', async () => {
-    addNewUser();
-})
+
 $("#list-profile-list").on('click', async () => {
-    getUserPage()
+    await getUserPage();
 
 })
 
